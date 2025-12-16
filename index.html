@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nostagious - A Melancholic Journey</title>
+    <meta name="description" content="An atmospheric roguelike endless platformer with combat">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Main Menu -->
+        <div id="main-menu" class="overlay">
+            <div class="menu-content">
+                <div class="title-container">
+                    <h1 class="game-title">NOSTAGIOUS</h1>
+                    <div class="title-decoration"></div>
+                </div>
+                <p class="subtitle">La nostalgia de ser niño es contagiosa</p>
+                <div class="menu-buttons">
+                    <button id="start-btn" class="menu-btn primary">
+                        <span class="btn-icon">▶</span> NORMAL
+                    </button>
+                    <button id="hardcore-btn" class="menu-btn danger">
+                        <span class="btn-icon">☠</span> HARDCORE
+                    </button>
+                    <button id="coop-btn" class="menu-btn info">
+                        <span class="btn-icon">👥</span> CO-OP
+                    </button>
+                    <button id="controls-btn" class="menu-btn">
+                        <span class="btn-icon">⌨</span> CONTROLES
+                    </button>
+                    <button id="settings-btn" class="menu-btn">
+                        <span class="btn-icon">⚙</span> OPCIONES
+                    </button>
+                </div>
+                <a href="https://eduardonunez.pages.dev" target="_blank" class="dev-link">
+                    Creado por Eduardo Núñez
+                </a>
+            </div>
+            <div class="menu-particles" id="menu-particles"></div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="overlay hidden">
+            <div class="panel-content">
+                <h2>OPCIONES</h2>
+                <div class="settings-container">
+                    <button id="music-toggle" class="settings-btn">🎵 Música: ON</button>
+                    <button id="sfx-toggle" class="settings-btn">🔊 Sonidos: ON</button>
+                </div>
+                <button id="settings-back-btn" class="menu-btn">← Volver</button>
+            </div>
+        </div>
+
+        <!-- Co-op Panel -->
+        <div id="coop-panel" class="overlay hidden">
+            <div class="panel-content">
+                <h2>MODO COOPERATIVO</h2>
+                <div id="coop-status">Inicializando...</div>
+
+                <div id="host-ui" class="hidden">
+                    <p>Escanea para unirte:</p>
+                    <div id="qrcode-container"></div>
+                    <label for="share-link" class="small-text">O comparte este link:</label>
+                    <input type="text" id="share-link" readonly title="Link de invitación">
+                    <div class="loading-spinner">Esperando jugador 2...</div>
+                </div>
+
+                <div id="join-ui" class="hidden">
+                    <p>Conectando con el Host...</p>
+                    <div class="loading-spinner"></div>
+                </div>
+
+                <button id="coop-back-btn" class="menu-btn">← Volver</button>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div id="controls-panel" class="overlay hidden">
+            <div class="panel-content">
+                <h2>CONTROLES</h2>
+                <div class="controls-grid">
+                    <div class="control-item">
+                        <div class="key-group"><span class="key">← →</span></div>
+                        <span class="action">Mover</span>
+                    </div>
+                    <div class="control-item">
+                        <div class="key-group"><span class="key">ESPACIO</span></div>
+                        <span class="action">Saltar / Doble Salto</span>
+                    </div>
+                    <div class="control-item">
+                        <div class="key-group"><span class="key">X</span></div>
+                        <span class="action">Disparar</span>
+                    </div>
+                    <div class="control-item">
+                        <div class="key-group"><span class="key">SHIFT</span></div>
+                        <span class="action">Dash</span>
+                    </div>
+                    <div class="control-item">
+                        <div class="key-group"><span class="key">↓</span></div>
+                        <span class="action">Deslizarse</span>
+                    </div>
+                    <div class="control-item">
+                        <div class="key-group"><span class="key">Muro</span></div>
+                        <span class="action">Wall Jump</span>
+                    </div>
+                </div>
+                <p class="controls-tip">Derrotar enemigos para obtener powerups!</p>
+                <p class="controls-tip">En móvil: usa los botones en pantalla</p>
+                <button id="back-btn" class="menu-btn">← Volver</button>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over" class="overlay hidden">
+            <div class="panel-content game-over-content">
+                <h2>EL VIAJE TERMINA</h2>
+                <div class="stats-container">
+                    <div class="stat">
+                        <span class="stat-label">Distancia</span>
+                        <span id="final-distance" class="stat-value">0m</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Score</span>
+                        <span id="final-score" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Bosses</span>
+                        <span id="final-bosses" class="stat-value">0</span>
+                    </div>
+                </div>
+                <div class="menu-buttons">
+                    <button id="retry-btn" class="menu-btn primary">↺ Intentar de nuevo</button>
+                    <button id="menu-btn" class="menu-btn">⌂ MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div id="hud-left">
+                <div id="health-bar">
+                    <div class="heart" id="heart-1">♥</div>
+                    <div class="heart" id="heart-2">♥</div>
+                    <div class="heart" id="heart-3">♥</div>
+                </div>
+                <div id="distance-container">
+                    <span id="distance-icon">◈</span>
+                    <span id="distance">0m</span>
+                </div>
+                <div id="score-container">
+                    <span>SCORE: </span>
+                    <span id="score">0</span>
+                </div>
+            </div>
+            <div id="hud-center">
+                <div id="checkpoint-timer" class="hidden">
+                    <span id="timer-label">CHECKPOINT</span>
+                    <span id="timer-value">30</span>
+                </div>
+                <div id="message-display"></div>
+            </div>
+            <div id="hud-right">
+                <div id="stats-display">
+                    <div class="stat-mini">DMG: <span id="damage-stat">1</span></div>
+                    <div class="stat-mini">SPD: <span id="speed-stat">1.0x</span></div>
+                </div>
+                <div id="abilities">
+                    <div id="dash-indicator" class="ability" title="Dash">⚡</div>
+                    <div id="jump-indicator" class="ability" title="Double Jump">↑↑</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Boss Warning -->
+        <div id="boss-warning" class="hidden">
+            <span>⚠ BOSS ⚠</span>
+        </div>
+
+        <!-- Touch Controls -->
+        <div id="touch-controls" class="hidden">
+            <div id="touch-left">
+                <div class="dpad-container">
+                    <button class="touch-btn dpad-btn" id="touch-left-btn">◀</button>
+                    <button class="touch-btn dpad-btn" id="touch-right-btn">▶</button>
+                </div>
+            </div>
+            <div id="touch-right">
+                <button class="touch-btn touch-action" id="touch-jump-btn">↑</button>
+                <button class="touch-btn touch-action" id="touch-shoot-btn">●</button>
+                <button class="touch-btn touch-action small" id="touch-dash-btn">⚡</button>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Vignette -->
+        <div id="vignette"></div>
+
+        <!-- Scanline Overlay -->
+        <div id="scanlines"></div>
+    </div>
+
+    <script src="debug_loader.js"></script>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="audio.js"></script>
+    <script src="assets.js"></script>
+    <script src="input.js"></script>
+    <script src="camera.js"></script>
+    <script src="combat.js"></script>
+    <script src="bosses.js"></script>
+    <script src="enemies.js"></script>
+    <script src="platforms.js"></script>
+    <script src="network.js"></script>
+    <script src="player.js"></script>
+    <script src="game.js"></script>
+</body>
+
+</html>
