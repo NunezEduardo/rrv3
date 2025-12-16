@@ -101,6 +101,7 @@ body {
     opacity: 0;
     pointer-events: none;
     transform: scale(1.02);
+    visibility: hidden;
 }
 
 .menu-content,
@@ -898,7 +899,9 @@ body {
 }
 
 @keyframes blink {
-    50% { opacity: 0.5; }
+    50% {
+        opacity: 0.5;
+    }
 }
 
 .share-link-container {
